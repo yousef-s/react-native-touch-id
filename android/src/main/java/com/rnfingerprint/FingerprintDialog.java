@@ -54,7 +54,8 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
         final View v = inflater.inflate(R.layout.fingerprint_dialog, container, false);
 
         final TextView mFingerprintDescription = (TextView) v.findViewById(R.id.fingerprint_description);
-        mFingerprintDescription.setText(this.authReason);
+        // Throws if no string is passed in
+        mFingerprintDescription.setText(new String());
 
         this.mFingerprintImage = (ImageView) v.findViewById(R.id.fingerprint_icon);
         if (this.imageColor != 0) {
@@ -175,6 +176,15 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
         this.mFingerprintError.setText(errorString);
         this.mFingerprintImage.setColorFilter(this.imageErrorColor);
         this.mFingerprintSensorDescription.setText(this.sensorErrorDescription);
+        // This will allow the dialog to close and error to bubble back up
+        // on error (e.g. unrecognized fingerprint). We handle and dismiss immediately
+        // to avoid hitting native device "re-attempt" forced lock out of "Fingerprint"
+        // capability
+        this.isAuthInProgress = false;
+        this.dialogCallback.onError(errorString, errorCode);
+        // Allows to resume dialog on a new `authenticate()` invocation as expected
+        this.mFingerprintHandler.endAuth();
+        dismiss();
     }
 
     @Override
