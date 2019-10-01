@@ -1,3 +1,10 @@
 node_modules
 npm-debug.log
 .DS_Store
+android/.gradle/
+android/.project
+android/.settings/
+examples/BiometricAuthExample/android/.project
+examples/BiometricAuthExample/android/.settings/
+examples/TouchIDExample/android/.project
+examples/TouchIDExample/android/.settings/
